@@ -1,44 +1,45 @@
-<!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
+# Sky Payment Reconciler (Java)
 
-## Project profile and code-audit snapshot
+**Status: engineering beta.** This repository implements a focused Java 21 batch reconciliation engine for comparing an internal payment ledger with an external provider snapshot.
 
-**What this is:** **Java-Payment-Reconciler** is a public repository described as: “Enterprise-grade payment reconciler implementation in Java. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **Python (4 files)**.
+## Implemented
 
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **18 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
+- exact payment-ID matching
+- integer minor-unit amount comparison (no floating-point money)
+- three-letter uppercase currency validation
+- explicit payment statuses: `SETTLED`, `REFUNDED`, `FAILED`
+- outcomes for matched, amount/currency mismatch, status mismatch, missing provider record, and missing ledger record
+- duplicate payment-ID rejection
+- bounded batches up to 100,000 records per side
+- deterministic result ordering
+- JUnit tests, Maven verification, dependency scanning
+- non-root container packaging and smoke execution
 
-**Implementation evidence:** 2 test-related file(s) detected; 2 dependency or package manifest(s) detected; 2 build/CI/infrastructure signal(s) detected; and 3 documentation or governance file(s) detected. Test filenames observed include `tests/__init__.py`, `tests/test_main.py`. Dependency or package files include `package.json`, `requirements.txt`. Build, CI, or infrastructure signals include `Dockerfile`, `.github/workflows/ci.yml`.
+## Build and test
 
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
+```bash
+mvn clean verify
+```
 
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
+## Container
 
-**Quality and security note:** No obvious secret-like pattern was detected by the limited static scan; this is not a substitute for a security audit. No TODO/FIXME marker was detected in the scanned text files.
+```bash
+docker build -t sky-payment-reconciler .
+docker run --rm sky-payment-reconciler
+```
 
----
+The container smoke command runs a deterministic sample reconciliation; it is not a payment processor.
 
-# Java Payment Reconciler
+## Boundaries
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/Java-Payment-Reconciler?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/Java-Payment-Reconciler?style=flat-square)
+This repository does **not** move money, connect to Stripe/banks/card networks, perform settlement, store PCI data, verify chargebacks, provide accounting approval workflows, or constitute a production financial control. It has no durable database, external-provider adapter, authentication/RBAC, tenant isolation, audit-log persistence, scheduled jobs, or deployment evidence.
 
-## 🌟 Overview
-**Java-Payment-Reconciler** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **Python**.
+A production integration should feed normalized provider and ledger records through stable adapters, persist reconciliation runs and approvals, protect access with RBAC, and include financial-control review before automated actions are permitted.
 
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
+## SKYCOIN4444 role
 
-## 🛠️ Technology Stack
-- **Primary Domain**: Python
-- **Ecosystem**: SkyCoin4444 Digital Platform
+`SKYCOIN4444 → Finance/Payments → reconciliation boundary`
 
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
+## License
 
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
-
----
-*Powered by SkyCoin4444*
+See `LICENSE`.
